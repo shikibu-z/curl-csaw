@@ -57,7 +57,7 @@ CFLAGS += @CURL_CFLAG_EXTRAS@
 AM_CPPFLAGS = -I$(top_srcdir)/include        \
               -I$(top_builddir)/lib          \
               -I$(top_srcdir)/lib            \
-              -I/home/junyong/chopchop/compartmenting/libcompart
+              -I${HOME}/chopchop/compartmenting/libcompart
 
 if USE_EMBEDDED_ARES
 AM_CPPFLAGS += -I$(top_builddir)/ares        \
