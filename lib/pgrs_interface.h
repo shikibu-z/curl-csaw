@@ -69,6 +69,16 @@ void marshall_string(char *buf, size_t *buf_index_, char *str);
 
 #endif // _LIBCOMPART_SERIALISATION__
 
+int check_data(struct Curl_easy *ce)
+{
+  if (ce->progress.current_speed != -1)
+  {
+    fprintf(stderr, "[RESULT] Current Speed: %ld\n", ce->progress.current_speed);
+    return 1;
+  }
+  return 0;
+}
+
 //marshall string to [size][str]
 void marshall_string(char *buf, size_t *buf_index_, char *str)
 {
