@@ -85,7 +85,7 @@
 #include "memdebug.h"
 
 #include "compart_api.h"
-#include "test.h"
+#include "pgrs_interface.h"
 
 /* true globals -- for curl_global_init() and curl_global_cleanup() */
 static unsigned int  initialized;
@@ -595,12 +595,11 @@ static CURLcode easy_transfer(struct Curl_multi *multi)
 {
   compart_check();
   compart_init(NO_COMPARTS, comparts, default_config);
-  struct extension_id* struct_ext = compart_register_fn("other compartment", &ext_speed);
+  struct extension_id* struct_ext = compart_register_fn("other compartment", &ext_ext_speed);
   compart_start("struct compartment");
   bool done = FALSE;
   CURLMcode mcode = CURLM_OK;
   CURLcode result = CURLE_OK;
-  // fprintf(stderr, "[LOCATION] In easy_transfer\n");
 
   while(!done && !mcode) {
     int still_running = 0;

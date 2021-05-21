@@ -29,9 +29,6 @@
 #include "timeval.h"
 #include "curl_printf.h"
 
-#include "compart_api.h"
-#include "pgrs_interface.h"
-
 /* check rate limits within this many recent milliseconds, at minimum. */
 #define MIN_RATE_LIMIT_PERIOD 3000
 
@@ -570,13 +567,6 @@ static void progress_meter(struct connectdata *conn)
 
   /* we flush the output stream to make it appear as soon as possible */
   fflush(data->set.err);
-
-  /* test serialization */
-  struct extension_data arg = ext_check_data_to_arg(data);
-  int success = ext_check_data_from_resp(ext_check_data(arg));
-  if(success == 1) {
-    fprintf(stderr, "[RESULT] Serialization Success!\n");
-  }
 }
 #else
  /* progress bar disabled */

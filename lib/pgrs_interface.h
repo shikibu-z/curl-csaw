@@ -11,25 +11,31 @@ static struct compart comparts[NO_COMPARTS] =
 
 struct extension_id *return_same_ext = NULL;
 
-struct extension_data ext_check_data_to_resp(int result);
+int ext_ext_speed_from_resp(struct extension_data data);
 
 void _unmarshall_struct_Curl_easy(char *buf, size_t *buf_index_, struct Curl_easy **TEST_data);
 
-void marshall_struct_Curl_easy(char *buf, size_t *buf_index_, struct Curl_easy *TEST_data);
+struct extension_data ext_ext_speed(struct extension_data data);
 
 void marshall_struct_Progress(char *buf, size_t *buf_index_, struct Progress *TEST_data);
 
-void ext_check_data_from_arg(struct extension_data data, struct Curl_easy **ce);
+struct extension_data ext_ext_speed_to_resp(int result);
 
-int ext_check_data_from_resp(struct extension_data data);
+void _unmarshall_struct_Curl_multi(char *buf, size_t *buf_index_, struct Curl_multi **TEST_data);
 
-struct extension_data ext_check_data_to_arg(struct Curl_easy *ce);
+struct extension_data ext_ext_speed_to_arg(struct Curl_multi *cm);
+
+void marshall_struct_Curl_easy(char *buf, size_t *buf_index_, struct Curl_easy *TEST_data);
+
+void marshall_struct_Curl_multi(char *buf, size_t *buf_index_, struct Curl_multi *TEST_data);
+
+void ext_ext_speed_from_arg(struct extension_data data, struct Curl_multi **cm);
 
 void _unmarshall_struct_Progress(char *buf, size_t *buf_index_, struct Progress **TEST_data);
 
-struct extension_data ext_check_data(struct extension_data data);
-
 #define unmarshall_struct_Curl_easy(a, b, c) _unmarshall_struct_Curl_easy(a, b, &c)
+
+#define unmarshall_struct_Curl_multi(a, b, c) _unmarshall_struct_Curl_multi(a, b, &c)
 
 #define unmarshall_struct_Progress(a, b, c) _unmarshall_struct_Progress(a, b, &c)
 
@@ -69,11 +75,11 @@ void marshall_string(char *buf, size_t *buf_index_, char *str);
 
 #endif // _LIBCOMPART_SERIALISATION__
 
-int check_data(struct Curl_easy *ce)
+int ext_speed(struct Curl_multi *cm)
 {
-  if (ce->progress.current_speed != -1)
+  if (cm->easyp->progress.current_speed != -1)
   {
-    fprintf(stderr, "[RESULT] Current Speed: %ld\n", ce->progress.current_speed);
+    fprintf(stderr, "[other compartment] got current speed: %ld\n", cm->easyp->progress.current_speed);
     return 1;
   }
   return 0;
@@ -144,6 +150,39 @@ void _unmarshall_struct_Curl_easy(char *buf, size_t *buf_index_, struct Curl_eas
 
 #define unmarshall_struct_Curl_easy(a, b, c) _unmarshall_struct_Curl_easy(a, b, &c)
 
+void marshall_struct_Progress(char *buf, size_t *buf_index_, struct Progress *TEST_data)
+{
+  size_t buf_index = *buf_index_;
+  if (TEST_data)
+  {
+    size_t size_of_element_ = sizeof(*TEST_data);
+    marshall_prim(buf, &buf_index, size_of_element_);
+    marshall_prim(buf, &buf_index, TEST_data->current_speed);
+  }
+  else
+  {
+    size_t size_of_element_ = 0;
+    marshall_prim(buf, &buf_index, size_of_element_);
+  }
+  *buf_index_ = buf_index;
+}
+void _unmarshall_struct_Curl_multi(char *buf, size_t *buf_index_, struct Curl_multi **TEST_data)
+{
+  size_t size_of_element_ = 0;
+  size_t buf_index = *buf_index_;
+  unmarshall_prim(buf, &buf_index, size_of_element_);
+  *TEST_data = NULL;
+  if (size_of_element_)
+  {
+    *TEST_data = calloc(1, sizeof(**TEST_data));
+    struct Curl_multi *TEST_data_ref = *TEST_data;
+    unmarshall_struct_Curl_easy(buf, &buf_index, TEST_data_ref->easyp);
+  }
+  *buf_index_ = buf_index;
+}
+
+#define unmarshall_struct_Curl_multi(a, b, c) _unmarshall_struct_Curl_multi(a, b, &c)
+
 void marshall_struct_Curl_easy(char *buf, size_t *buf_index_, struct Curl_easy *TEST_data)
 {
   size_t buf_index = *buf_index_;
@@ -160,14 +199,14 @@ void marshall_struct_Curl_easy(char *buf, size_t *buf_index_, struct Curl_easy *
   }
   *buf_index_ = buf_index;
 }
-void marshall_struct_Progress(char *buf, size_t *buf_index_, struct Progress *TEST_data)
+void marshall_struct_Curl_multi(char *buf, size_t *buf_index_, struct Curl_multi *TEST_data)
 {
   size_t buf_index = *buf_index_;
   if (TEST_data)
   {
     size_t size_of_element_ = sizeof(*TEST_data);
     marshall_prim(buf, &buf_index, size_of_element_);
-    marshall_prim(buf, &buf_index, TEST_data->current_speed);
+    marshall_struct_Curl_easy(buf, &buf_index, TEST_data->easyp);
   }
   else
   {
@@ -193,7 +232,24 @@ void _unmarshall_struct_Progress(char *buf, size_t *buf_index_, struct Progress 
 
 #define unmarshall_struct_Progress(a, b, c) _unmarshall_struct_Progress(a, b, &c)
 
-struct extension_data ext_check_data_to_resp(int result)
+int ext_ext_speed_from_resp(struct extension_data data)
+{
+  int result;
+  char *buf = data.buf;
+  size_t buf_index = 0;
+  unmarshall_prim(buf, &buf_index, result);
+  return result;
+}
+struct extension_data ext_ext_speed(struct extension_data data)
+{
+  struct Curl_multi *cm;
+  ext_ext_speed_from_arg(data, &cm);
+  int return_value;
+  return_value = ext_speed(cm);
+  struct extension_data result = ext_ext_speed_to_resp(return_value);
+  return result;
+}
+struct extension_data ext_ext_speed_to_resp(int result)
 {
   struct extension_data data;
   char *buf = data.buf;
@@ -202,35 +258,18 @@ struct extension_data ext_check_data_to_resp(int result)
   data.bufc = buf_index;
   return data;
 }
-void ext_check_data_from_arg(struct extension_data data, struct Curl_easy **ce)
-{
-  char *buf = data.buf;
-  size_t buf_index = 0;
-  unmarshall_struct_Curl_easy(buf, &buf_index, *ce);
-}
-int ext_check_data_from_resp(struct extension_data data)
-{
-  int result;
-  char *buf = data.buf;
-  size_t buf_index = 0;
-  unmarshall_prim(buf, &buf_index, result);
-  return result;
-}
-struct extension_data ext_check_data_to_arg(struct Curl_easy *ce)
+struct extension_data ext_ext_speed_to_arg(struct Curl_multi *cm)
 {
   struct extension_data data;
   char *buf = data.buf;
   size_t buf_index = 0;
-  marshall_struct_Curl_easy(buf, &buf_index, ce);
+  marshall_struct_Curl_multi(buf, &buf_index, cm);
   data.bufc = buf_index;
   return data;
 }
-struct extension_data ext_check_data(struct extension_data data)
+void ext_ext_speed_from_arg(struct extension_data data, struct Curl_multi **cm)
 {
-  struct Curl_easy *ce;
-  ext_check_data_from_arg(data, &ce);
-  int return_value;
-  return_value = check_data(ce);
-  struct extension_data result = ext_check_data_to_resp(return_value);
-  return result;
+  char *buf = data.buf;
+  size_t buf_index = 0;
+  unmarshall_struct_Curl_multi(buf, &buf_index, *cm);
 }
