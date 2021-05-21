@@ -85,7 +85,7 @@
 #include "memdebug.h"
 
 #include "compart_api.h"
-#include "test_comp.h"
+#include "test.h"
 
 /* true globals -- for curl_global_init() and curl_global_cleanup() */
 static unsigned int  initialized;
@@ -593,28 +593,25 @@ static CURLcode easy_events(struct Curl_multi *multi)
 
 static CURLcode easy_transfer(struct Curl_multi *multi)
 {
-  // compart_check();
-  // compart_init(NO_COMPARTS, comparts, default_config);
-  // struct extension_id* struct_ext = compart_register_fn("other compartment", &simple);
-  // compart_start("struct compartment");
+  compart_check();
+  compart_init(NO_COMPARTS, comparts, default_config);
+  struct extension_id* struct_ext = compart_register_fn("other compartment", &ext_speed);
+  compart_start("struct compartment");
   bool done = FALSE;
   CURLMcode mcode = CURLM_OK;
   CURLcode result = CURLE_OK;
   // fprintf(stderr, "[LOCATION] In easy_transfer\n");
 
   while(!done && !mcode) {
-    // struct extension_data arg;
-    // bzero(arg.buf, EXT_ARG_BUF_SIZE);
-    // arg.buf[0] = 'A';
-    // arg.bufc = 1;
-    // struct extension_data compart_result = compart_call_fn(struct_ext, arg);
-
     int still_running = 0;
 
     mcode = curl_multi_poll(multi, NULL, 0, 1000, NULL);
 
     if(!mcode)
       mcode = curl_multi_perform(multi, &still_running);
+
+    struct extension_data arg = ext_ext_speed_to_arg(multi);
+    int compart_result = ext_ext_speed_from_resp(compart_call_fn(struct_ext, arg));
 
     /* only read 'still_running' if curl_multi_perform() return OK */
     if(!mcode && !still_running) {
