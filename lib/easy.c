@@ -84,6 +84,9 @@
 #include "curl_memory.h"
 #include "memdebug.h"
 
+#include "compart_api.h"
+#include "test_comp.h"
+
 /* true globals -- for curl_global_init() and curl_global_cleanup() */
 static unsigned int  initialized;
 static long          init_flags;
@@ -590,11 +593,22 @@ static CURLcode easy_events(struct Curl_multi *multi)
 
 static CURLcode easy_transfer(struct Curl_multi *multi)
 {
+  // compart_check();
+  // compart_init(NO_COMPARTS, comparts, default_config);
+  // struct extension_id* struct_ext = compart_register_fn("other compartment", &simple);
+  // compart_start("struct compartment");
   bool done = FALSE;
   CURLMcode mcode = CURLM_OK;
   CURLcode result = CURLE_OK;
+  // fprintf(stderr, "[LOCATION] In easy_transfer\n");
 
   while(!done && !mcode) {
+    // struct extension_data arg;
+    // bzero(arg.buf, EXT_ARG_BUF_SIZE);
+    // arg.buf[0] = 'A';
+    // arg.bufc = 1;
+    // struct extension_data compart_result = compart_call_fn(struct_ext, arg);
+
     int still_running = 0;
 
     mcode = curl_multi_poll(multi, NULL, 0, 1000, NULL);
