@@ -81,7 +81,7 @@ VERSIONINFO=-version-info 10:0:6
 #
 # For the full guide on libcurl ABI rules, see docs/libcurl/ABI
 
-AM_CPPFLAGS += -DBUILDING_LIBCURL
+AM_CPPFLAGS += -DBUILDING_LIBCURL -DINCLUDE_PID
 AM_LDFLAGS = -L${HOME}/chopchop/compartmenting/libcompart/compart.o
 AM_CFLAGS =
 
