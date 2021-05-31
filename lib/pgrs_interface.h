@@ -3,11 +3,15 @@
 #include "urldata.h"
 #include "multihandle.h"
 
+#include "combin.h"
+
 #define NO_COMPARTS 2
+
+static struct combin combins[NO_COMPARTS] = {{.path = "/home/junyong/case2/other"}};
 
 static struct compart comparts[NO_COMPARTS] =
     {{.name = "struct compartment", .uid = 1000, .gid = 1000, .path = NULL},
-     {.name = "other compartment", .uid = 1000, .gid = 1000, .path = NULL}};
+     {.name = "other compartment", .uid = 1000, .gid = 1000, .path = NULL, .comms = &combins[0]}};
 
 struct extension_id *return_same_ext = NULL;
 
