@@ -3,11 +3,11 @@
 #include "urldata.h"
 #include "multihandle.h"
 
-#include "combin.h"
+#include "combin_tcp.h"
 
 #define NO_COMPARTS 2
 
-static struct combin combins[NO_COMPARTS] = {{.path = "/home/junyong/case2/other"}};
+static struct combin combins[NO_COMPARTS] = {{.address = "127.0.0.1", .port = 8888}};
 
 static struct compart comparts[NO_COMPARTS] =
     {{.name = "struct compartment", .uid = 1000, .gid = 1000, .path = NULL},
