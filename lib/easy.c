@@ -593,12 +593,16 @@ static CURLcode easy_events(struct Curl_multi *multi)
 
 static CURLcode easy_transfer(struct Curl_multi *multi)
 {
+  /* setup compart config */
   compart_check();
   struct compart_config my_config = default_config;
   my_config.start_subs = 0;
+
+  /* initialize and start compartment, change this for seperated binaries */
   compart_init(NO_COMPARTS, comparts, my_config);
   struct extension_id* struct_ext = compart_register_fn("other compartment", &ext_ext_speed);
   compart_start("struct compartment");
+
   bool done = FALSE;
   CURLMcode mcode = CURLM_OK;
   CURLcode result = CURLE_OK;
