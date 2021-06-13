@@ -126,6 +126,7 @@ void unmarshall_string_(char* buf, size_t* buf_index_, char** str)
 
     *buf_index_ = buf_index;
 }
+
 void _unmarshall_struct_Curl_easy(char* buf, size_t* buf_index_, struct Curl_easy** TEST_data)
 {
     size_t size_of_element_ = 0;
@@ -160,6 +161,7 @@ void marshall_struct_Progress(char* buf, size_t* buf_index_, struct Progress* TE
     }
     *buf_index_ = buf_index;
 }
+
 void _unmarshall_struct_Curl_multi(char* buf, size_t* buf_index_, struct Curl_multi** TEST_data)
 {
     size_t size_of_element_ = 0;
@@ -189,6 +191,7 @@ void marshall_struct_Curl_easy(char* buf, size_t* buf_index_, struct Curl_easy* 
     }
     *buf_index_ = buf_index;
 }
+
 void marshall_struct_Curl_multi(char* buf, size_t* buf_index_, struct Curl_multi* TEST_data)
 {
     size_t buf_index = *buf_index_;
@@ -202,6 +205,7 @@ void marshall_struct_Curl_multi(char* buf, size_t* buf_index_, struct Curl_multi
     }
     *buf_index_ = buf_index;
 }
+
 void _unmarshall_struct_Progress(char* buf, size_t* buf_index_, struct Progress** TEST_data)
 {
     size_t size_of_element_ = 0;
@@ -226,6 +230,7 @@ int ext_ext_speed_from_resp(struct extension_data data)
     unmarshall_prim(buf, &buf_index, result);
     return result;
 }
+
 struct extension_data ext_ext_speed(struct extension_data data)
 {
     struct Curl_multi* cm;
@@ -235,6 +240,7 @@ struct extension_data ext_ext_speed(struct extension_data data)
     struct extension_data result = ext_ext_speed_to_resp(return_value);
     return result;
 }
+
 struct extension_data ext_ext_speed_to_resp(int result)
 {
     struct extension_data data;
@@ -244,6 +250,7 @@ struct extension_data ext_ext_speed_to_resp(int result)
     data.bufc = buf_index;
     return data;
 }
+
 struct extension_data ext_ext_speed_to_arg(struct Curl_multi* cm)
 {
     struct extension_data data;
@@ -253,6 +260,7 @@ struct extension_data ext_ext_speed_to_arg(struct Curl_multi* cm)
     data.bufc = buf_index;
     return data;
 }
+
 void ext_ext_speed_from_arg(struct extension_data data, struct Curl_multi** cm)
 {
     char* buf = data.buf;
