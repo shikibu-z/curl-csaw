@@ -72,6 +72,7 @@ def main():
         cmd = "echo 'junyong' | sudo -S ./curl-base http://158.130.62.105:8033/" + \
             file_name + " --output /dev/null"
         for i in range(repeat_time):
+            time.sleep(1)
             start_time = time.time()
             result = subprocess.run(cmd, shell=True)
             end_time = time.time()
