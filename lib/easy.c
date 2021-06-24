@@ -84,6 +84,7 @@
 #include "curl_memory.h"
 #include "memdebug.h"
 
+/* libcompart includes */
 #include "compart_api.h"
 #include "pgrs_interface.h"
 
@@ -600,7 +601,8 @@ static CURLcode easy_transfer(struct Curl_multi *multi)
 
   /* initialize and start compartment, change this for seperated binaries */
   compart_init(NO_COMPARTS, comparts, my_config);
-  struct extension_id* struct_ext = compart_register_fn("other compartment", &ext_ext_speed);
+  struct extension_id* struct_ext
+      = compart_register_fn("other compartment", &ext_ext_speed);
   compart_start("struct compartment");
 
   bool done = FALSE;
@@ -616,7 +618,8 @@ static CURLcode easy_transfer(struct Curl_multi *multi)
       mcode = curl_multi_perform(multi, &still_running);
 
     struct extension_data arg = ext_ext_speed_to_arg(multi);
-    int compart_result = ext_ext_speed_from_resp(compart_call_fn(struct_ext, arg));
+    int compart_result
+        = ext_ext_speed_from_resp(compart_call_fn(struct_ext, arg));
 
     /* only read 'still_running' if curl_multi_perform() return OK */
     if(!mcode && !still_running) {
