@@ -1,7 +1,12 @@
-"""This is the evaluation script of cURL, which is a part of the csaw paper 
-at the University of Pennsylvania. 
-Author: Junyong Zhao (junyong@seas.upenn.edu), 2021.
-"""
+'''
+Description  : This is the evaluation script that compare number increase from
+input files. This file is a part of the csaw paper at the University of 
+Pennsylvania.
+Author       : Junyong Zhao (junyong@seas.upenn.edu)
+Date         : 2021-06-19 13:24:35
+LastEditors  : Junyong Zhao (junyong@seas.upenn.edu)
+LastEditTime : 2021-06-24 15:40:12
+'''
 
 import os
 import sys
