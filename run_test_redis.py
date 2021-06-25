@@ -2,7 +2,7 @@
 Description  : This is the evaluation script that runs experiments. This file 
 is a part of the csaw paper.
 Date         : 2021-06-23 22:23:06
-LastEditTime : 2021-06-25 14:17:39
+LastEditTime : 2021-06-25 14:36:32
 '''
 
 import sys
@@ -49,8 +49,8 @@ def run_sharding():
 
 
 def write_shard(fname, raw, mean, stdv):
-    with open(fname, "a") as f:
-        np.savetxt(f, raw)
+    with open(fname, "ab") as f:
+        np.savetxt(f, raw, fmt="%1f")
         np.savetxt(f, [mean], fmt="%1.3f")
         np.savetxt(f, [stdv], fmt="%1.3f")
         f.close()
