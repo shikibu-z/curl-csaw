@@ -1,10 +1,8 @@
 '''
 Description  : This is the evaluation script that runs experiments. This file 
-is a part of the csaw paper at the University of Pennsylvania.
-Author       : Junyong Zhao (junyong@seas.upenn.edu)
+is a part of the csaw paper.
 Date         : 2021-06-19 13:24:35
-LastEditors  : Junyong Zhao (junyong@seas.upenn.edu)
-LastEditTime : 2021-06-24 22:21:06
+LastEditTime : 2021-06-24 22:23:16
 '''
 
 import sys
