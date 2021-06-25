@@ -2,7 +2,7 @@
 Description  : This is the evaluation script that runs experiments. This file 
 is a part of the csaw paper.
 Date         : 2021-06-23 22:23:06
-LastEditTime : 2021-06-25 14:36:32
+LastEditTime : 2021-06-25 15:27:41
 '''
 
 import sys
@@ -11,6 +11,9 @@ import time
 import math
 import subprocess
 import numpy as np
+
+import matplotlib
+matplotlib.use("Agg")
 from matplotlib import pyplot as plt
 
 sudo = ""
@@ -50,7 +53,7 @@ def run_sharding():
 
 def write_shard(fname, raw, mean, stdv):
     with open(fname, "ab") as f:
-        np.savetxt(f, raw, fmt="%1f")
+        np.savetxt(f, raw.astype(int), fmt="%i")
         np.savetxt(f, [mean], fmt="%1.3f")
         np.savetxt(f, [stdv], fmt="%1.3f")
         f.close()
@@ -65,7 +68,7 @@ def plot_shard(mean1, mean2, mean3, mean4, stdv1, stdv2, stdv3, stdv4):
     plt.errorbar(times, mean1, yerr=stdv1, marker="o", linewidth=0.6)
     plt.errorbar(times, mean2, yerr=stdv2, marker="*", linewidth=0.6)
     plt.errorbar(times, mean3, yerr=stdv3, marker="^", linewidth=0.6)
-    plt.errorbar(times, mean4, yerr=stdv4, marker="P", linewidth=0.6)
+    plt.errorbar(times, mean4, yerr=stdv4, marker="x", linewidth=0.6)
     plt.legend(["Shard 1", "Shard 2", "Shard 3", "Shard 4"])
     plt.title("Queries in 4 Shards", fontsize=12)
     plt.xlabel("Time (s)", fontsize=12)
@@ -109,7 +112,8 @@ def read_shard(name):
                 if result[0] == 0:
                     result.pop(0)
         fobj.close()
-    result.pop(-1)
+    if len(result) >= 4:
+        result.pop(-1)
     return result
 
 
