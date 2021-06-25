@@ -2,7 +2,7 @@
 Description  : This is the evaluation script that runs experiments. This file 
 is a part of the csaw paper.
 Date         : 2021-06-23 22:23:06
-LastEditTime : 2021-06-25 15:27:41
+LastEditTime : 2021-06-25 15:34:40
 '''
 
 import sys
@@ -97,6 +97,8 @@ def post_process(shard1, shard2, shard3, shard4):
     write_shard("shard2.csv", shard2, mean2, stdv2)
     write_shard("shard3.csv", shard3, mean3, stdv3)
     write_shard("shard4.csv", shard4, mean4, stdv4)
+
+    plot_shard(mean1, mean2, mean3, mean4, stdv1, stdv2, stdv3, stdv4)
 
 
 def read_shard(name):
