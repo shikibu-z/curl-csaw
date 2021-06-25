@@ -4,7 +4,7 @@ is a part of the csaw paper at the University of Pennsylvania.
 Author       : Junyong Zhao (junyong@seas.upenn.edu)
 Date         : 2021-06-23 22:23:06
 LastEditors  : Junyong Zhao (junyong@seas.upenn.edu)
-LastEditTime : 2021-06-24 20:43:57
+LastEditTime : 2021-06-24 22:18:25
 '''
 
 import sys
@@ -13,22 +13,36 @@ import time
 import math
 import subprocess
 
+sudo = ""
+
+
+def read_config():
+    try:
+        with open("exp_config.txt", "r") as fcon:
+            configs = fcon.readlines()
+            global sudo
+            sudo = str(configs[0].split("\n")[0])
+    except FileNotFoundError:
+        sys.exit("[ERROR] Need a configure file for password, server IP, etc.")
+
 
 def run_sharding():
     server_proc = subprocess.run(
-        "echo 'junyong' | sudo -S ./redis-server &> /dev/null &",
+        "echo " + sudo + " | sudo -S ./redis-server &> /dev/null &",
         shell=True,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL
     )
+    time.sleep(1)
     benchmark_proc = subprocess.run(
-        "echo 'junyong' | sudo -S ./redis-benchmark",
+        "echo " + sudo + " | sudo -S ./redis-benchmark",
         shell=True,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL
     )
+    time.sleep(1)
     terminate = subprocess.run(
-        "echo 'junyong' | sudo -S pkill -9 redis-server",
+        "echo " + sudo + " | sudo -S pkill -9 redis-server",
         shell=True
     )
 
@@ -38,25 +52,17 @@ def post_process(result):
 
 
 def rshard(name):
-    result = []
+    result = [0]
     with open(name, "r") as fobj:
         content = fobj.readlines()
-        temp = []
         for i in range(len(content)):
             reading = int(content[i].split(",")[0])
-            if reading == 0 and int(content[i - 1].split(",")[0]) != 0:
-                temp.pop(-1)
-                rsub = []
-                rsub.append(temp[0])
-                for j in range(len(temp) - 1):
-                    rsub.append(temp[j + 1] + rsub[j])
-                result.append(rsub)
-                temp = []
-                # break  # we might do sth different here
-            elif reading != 0:
-                temp.append(reading)
+            if reading == 0:
+                break
             else:
-                continue
+                result.append(result[i - 1] + reading)
+                if result[0] == 0:
+                    result.pop(0)
     return result
 
 
