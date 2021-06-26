@@ -195,7 +195,7 @@ def main():
                 length = len(i)
         for i in range(len(replication)):
             replication[i] = replication[i][: length]
-        post_replic()
+        post_replic(replication)
 
     else:
         sys.exit("[ERROR] Wrong input!")
