@@ -2,7 +2,7 @@
 Description  : This is the evaluation script that runs experiments. This file 
 is a part of the csaw paper.
 Date         : 2021-06-23 22:23:06
-LastEditTime : 2021-06-25 15:34:40
+LastEditTime : 2021-06-25 22:55:21
 '''
 
 import sys
@@ -11,10 +11,7 @@ import time
 import math
 import subprocess
 import numpy as np
-
-import matplotlib
-matplotlib.use("Agg")
-from matplotlib import pyplot as plt
+import matplotlib.pyplot as plt
 
 sudo = ""
 
@@ -51,6 +48,37 @@ def run_sharding():
     )
 
 
+def run_replic():
+    server_proc = subprocess.run(
+        "echo " + sudo + " | sudo -S ./redis-server &> /dev/null &",
+        shell=True,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL
+    )
+    time.sleep(1)
+    try:
+        benchmark_proc = subprocess.run(
+            "echo " + sudo + " | sudo -S ./redis-benchmark -n 300000",
+            shell=True,
+            timeout=10,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL
+        )
+    except subprocess.TimeoutExpired:
+        terminate_benchm = subprocess.run(
+            "echo " + sudo + " | sudo -S pkill -9 redis-benchmark",
+            shell=True,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL
+        )
+        terminate_server = subprocess.run(
+            "echo " + sudo + " | sudo -S pkill -9 redis-server",
+            shell=True,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL
+        )
+
+
 def write_shard(fname, raw, mean, stdv):
     with open(fname, "ab") as f:
         np.savetxt(f, raw.astype(int), fmt="%i")
@@ -59,25 +87,7 @@ def write_shard(fname, raw, mean, stdv):
         f.close()
 
 
-def plot_shard(mean1, mean2, mean3, mean4, stdv1, stdv2, stdv3, stdv4):
-    plt.rcParams['ps.fonttype'] = 42
-    plt.rcParams['pdf.fonttype'] = 42
-
-    times = np.arange(len(mean1)) + 1
-    fig = plt.figure()
-    plt.errorbar(times, mean1, yerr=stdv1, marker="o", linewidth=0.6)
-    plt.errorbar(times, mean2, yerr=stdv2, marker="*", linewidth=0.6)
-    plt.errorbar(times, mean3, yerr=stdv3, marker="^", linewidth=0.6)
-    plt.errorbar(times, mean4, yerr=stdv4, marker="x", linewidth=0.6)
-    plt.legend(["Shard 1", "Shard 2", "Shard 3", "Shard 4"])
-    plt.title("Queries in 4 Shards", fontsize=12)
-    plt.xlabel("Time (s)", fontsize=12)
-    plt.ylabel("Queries/s", fontsize=12)
-    plt.grid(True)
-    fig.savefig("sharding.pdf", bbox_inches="tight")
-
-
-def post_process(shard1, shard2, shard3, shard4):
+def post_shard(shard1, shard2, shard3, shard4):
     shard1 = np.array(shard1)
     shard2 = np.array(shard2)
     shard3 = np.array(shard3)
@@ -98,7 +108,16 @@ def post_process(shard1, shard2, shard3, shard4):
     write_shard("shard3.csv", shard3, mean3, stdv3)
     write_shard("shard4.csv", shard4, mean4, stdv4)
 
-    plot_shard(mean1, mean2, mean3, mean4, stdv1, stdv2, stdv3, stdv4)
+
+def post_replic(replication):
+    replication = np.array(replication)
+    mean = replication.mean(0)
+    stdv = replication.std(0)
+    with open("replic.csv", "ab") as f:
+        np.savetxt(f, replication.astype(int), fmt="%i")
+        np.savetxt(f, [mean], fmt="%1.3f")
+        np.savetxt(f, [stdv], fmt="%1.3f")
+        f.close()
 
 
 def read_shard(name):
@@ -119,6 +138,23 @@ def read_shard(name):
     return result
 
 
+def read_replic():
+    result = []
+    with open("results.txt", "r") as fobj:
+        content = fobj.readlines()
+        for i in range(len(content)):
+            reading = content[i].split(",")[0]
+            if reading == "Replication checkpoint...\n":
+                continue
+            reading = int(reading)
+            if reading == 0:
+                break
+            else:
+                result.append(reading)
+        fobj.close()
+    return result
+
+
 def main():
     if len(sys.argv) != 3:
         sys.exit("[ERROR] Usage: python3 run_test_redis.py [test] [repeat time]")
@@ -132,6 +168,8 @@ def main():
     shard3 = []
     shard4 = []
 
+    replication = []
+
     if str(sys.argv[1]) == "sharding":
         for i in range(int(sys.argv[2])):
             run_sharding()
@@ -139,10 +177,26 @@ def main():
             shard2.append(read_shard("sharding_915_results.txt"))
             shard3.append(read_shard("sharding_916_results.txt"))
             shard4.append(read_shard("sharding_917_results.txt"))
-        post_process(shard1, shard2, shard3, shard4)
+        post_shard(shard1, shard2, shard3, shard4)
 
     elif str(sys.argv[1]) == "replication":
-        pass
+        for i in range(int(sys.argv[2])):
+            run_replic()
+            replication.append(read_replic())
+            subprocess.run(
+                "echo " + sudo + " | sudo -S rm results.txt",
+                shell=True,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL
+            )
+        length = len(replication[0])
+        for i in replication:
+            if len(i) < length:
+                length = len(i)
+        for i in range(len(replication)):
+            replication[i] = replication[i][: length]
+        post_replic()
+
     else:
         sys.exit("[ERROR] Wrong input!")
 
