@@ -2,7 +2,7 @@
 Description  : This is the evaluation script that runs experiments. This file 
 is a part of the csaw paper.
 Date         : 2021-06-23 22:23:06
-LastEditTime : 2021-06-25 22:55:21
+LastEditTime : 2021-06-28 17:15:58
 '''
 
 import sys
@@ -88,6 +88,25 @@ def write_shard(fname, raw, mean, stdv):
 
 
 def post_shard(shard1, shard2, shard3, shard4):
+    minlen1 = min(map(len, shard1))
+    minlen2 = min(map(len, shard2))
+    minlen3 = min(map(len, shard3))
+    minlen4 = min(map(len, shard4))
+    minlen = min([minlen1, minlen2, minlen3, minlen4])
+
+    for i in range(len(shard1)):
+        shard1[i] = shard1[i][: minlen]
+        shard1[i].pop(-1)
+    for i in range(len(shard2)):
+        shard2[i] = shard2[i][: minlen]
+        shard2[i].pop(-1)
+    for i in range(len(shard3)):
+        shard3[i] = shard3[i][: minlen]
+        shard3[i].pop(-1)
+    for i in range(len(shard4)):
+        shard4[i] = shard4[i][: minlen]
+        shard4[i].pop(-1)
+
     shard1 = np.array(shard1)
     shard2 = np.array(shard2)
     shard3 = np.array(shard3)
@@ -133,8 +152,6 @@ def read_shard(name):
                 if result[0] == 0:
                     result.pop(0)
         fobj.close()
-    if len(result) >= 4:
-        result.pop(-1)
     return result
 
 
@@ -189,12 +206,9 @@ def main():
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL
             )
-        length = len(replication[0])
-        for i in replication:
-            if len(i) < length:
-                length = len(i)
+        minlen = min(map(len, replication))
         for i in range(len(replication)):
-            replication[i] = replication[i][: length]
+            replication[i] = replication[i][: minlen]
         post_replic(replication)
 
     else:
