@@ -2,7 +2,7 @@
 Description  : This is the evaluation script that runs experiments. This file 
 is a part of the csaw paper.
 Date         : 2021-06-25 21:37:03
-LastEditTime : 2021-06-25 22:30:04
+LastEditTime : 2021-06-27 21:01:45
 '''
 
 import numpy as np
@@ -10,6 +10,22 @@ import matplotlib.pyplot as plt
 
 plt.rcParams['ps.fonttype'] = 42
 plt.rcParams['pdf.fonttype'] = 42
+
+
+def plot_replic():
+    results = np.genfromtxt("redis_results/replic_2min_1.csv")
+    mean = results[-2]
+    stdv = results[-1]
+    times = np.arange(len(mean)) + 1
+    fig = plt.figure()
+    plt.errorbar(times, mean/1000, yerr=stdv/1000, capsize=1, ecolor="green",
+                 elinewidth=0.7)
+    plt.title("Replication Experiment")
+    plt.xlabel("Time (s)")
+    plt.ylabel("K Queries / s")
+    plt.grid(True)
+    plt.show()
+
 
 shard1 = np.genfromtxt("redis_results/shard1.csv")
 shard2 = np.genfromtxt("redis_results/shard2.csv")
