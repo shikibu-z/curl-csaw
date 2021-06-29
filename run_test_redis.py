@@ -2,7 +2,7 @@
 Description  : This is the evaluation script that runs experiments. This file 
 is a part of the csaw paper.
 Date         : 2021-06-23 22:23:06
-LastEditTime : 2021-06-28 17:15:58
+LastEditTime : 2021-06-29 01:20:23
 '''
 
 import sys
@@ -36,7 +36,7 @@ def run_sharding():
     )
     time.sleep(1)
     benchmark_proc = subprocess.run(
-        "echo " + sudo + " | sudo -S ./redis-benchmark",
+        "echo " + sudo + " | sudo -S ./redis-benchmark -n 500000",
         shell=True,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL
@@ -58,7 +58,7 @@ def run_replic():
     time.sleep(1)
     try:
         benchmark_proc = subprocess.run(
-            "echo " + sudo + " | sudo -S ./redis-benchmark -n 300000",
+            "echo " + sudo + " | sudo -S ./redis-benchmark -n 3500000",
             shell=True,
             timeout=10,
             stdout=subprocess.DEVNULL,

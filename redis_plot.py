@@ -2,7 +2,7 @@
 Description  : This is the evaluation script that runs experiments. This file 
 is a part of the csaw paper.
 Date         : 2021-06-25 21:37:03
-LastEditTime : 2021-06-28 17:17:50
+LastEditTime : 2021-06-28 18:38:33
 '''
 
 import numpy as np
@@ -50,37 +50,41 @@ def plot_replic():
 
 
 def plot_sharding():
-    shard1 = np.genfromtxt("redis_results/shard1_size.csv")
-    shard2 = np.genfromtxt("redis_results/shard2_size.csv")
-    shard3 = np.genfromtxt("redis_results/shard3_size.csv")
-    shard4 = np.genfromtxt("redis_results/shard4_size.csv")
+    shard1 = np.genfromtxt("redis_results/shard1_2min.csv")
+    shard2 = np.genfromtxt("redis_results/shard2_2min.csv")
+    shard3 = np.genfromtxt("redis_results/shard3_2min.csv")
+    shard4 = np.genfromtxt("redis_results/shard4_2min.csv")
 
-    mean1 = shard1[-2]
-    stdv1 = shard1[-1]
-    mean2 = shard2[-2]
-    stdv2 = shard2[-1]
-    mean3 = shard3[-2]
-    stdv3 = shard3[-1]
-    mean4 = shard4[-2]
-    stdv4 = shard4[-1]
+    mean1 = shard1[-2][: 120]
+    stdv1 = shard1[-1][: 120]
+    mean2 = shard2[-2][: 120]
+    stdv2 = shard2[-1][: 120]
+    mean3 = shard3[-2][: 120]
+    stdv3 = shard3[-1][: 120]
+    mean4 = shard4[-2][: 120]
+    stdv4 = shard4[-1][: 120]
 
     times = np.arange(len(mean1)) + 1
     fig = plt.figure()
-    plt.errorbar(times, mean1/1000, yerr=stdv1/1000, marker="o", linewidth=0.7)
-    plt.errorbar(times, mean2/1000, yerr=stdv2/1000, marker="*", linewidth=0.7)
-    plt.errorbar(times, mean3/1000, yerr=stdv3/1000, marker="^", linewidth=0.7)
-    plt.errorbar(times, mean4/1000, yerr=stdv4/1000, marker="x", linewidth=0.7)
+    plt.errorbar(times, mean1/1000, yerr=stdv1/1000,
+                 linewidth=0.7, marker=".", elinewidth=0.7)
+    plt.errorbar(times, mean2/1000, yerr=stdv2/1000,
+                 linewidth=0.7, marker="1", elinewidth=0.7)
+    plt.errorbar(times, mean3/1000, yerr=stdv3/1000,
+                 linewidth=0.7, marker="+", elinewidth=0.7)
+    plt.errorbar(times, mean4/1000, yerr=stdv4/1000,
+                 linewidth=0.7, marker="x", elinewidth=0.7)
     plt.legend(["Shard 1", "Shard 2", "Shard 3", "Shard 4"])
     plt.title("Accumulated Queries in 4 Shards", fontsize=12)
     plt.xlabel("Time (s)", fontsize=12)
     plt.ylabel("Accumulated Queries (K)", fontsize=12)
     plt.grid(True)
-    # plt.show()
-    fig.savefig("sharding_size.pdf", bbox_inches="tight")
+    plt.show()
+    # fig.savefig("sharding_size.pdf", bbox_inches="tight")
 
 
 def main():
-    plot_replic()
+    # plot_replic()
     plot_sharding()
 
 
