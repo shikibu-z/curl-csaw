@@ -2,7 +2,7 @@
 Description  : This is the evaluation script that runs experiments. This file 
 is a part of the csaw paper.
 Date         : 2021-06-23 22:23:06
-LastEditTime : 2021-06-29 22:51:26
+LastEditTime : 2021-06-30 14:42:53
 '''
 
 import sys
@@ -27,7 +27,7 @@ def read_config():
         sys.exit("[ERROR] Need a configure file for password, server IP, etc.")
 
 
-def run_sharding():
+def run_long(para_n, time_out):
     server_proc = subprocess.run(
         "echo " + sudo + " | sudo -S ./redis-server &> /dev/null &",
         shell=True,
@@ -37,40 +37,9 @@ def run_sharding():
     time.sleep(1)
     try:
         benchmark_proc = subprocess.run(
-            "echo " + sudo + " | sudo -S ./redis-benchmark -n 500000",
+            "echo " + sudo + " | sudo -S ./redis-benchmark -n " + para_n,
             shell=True,
-            timeout=150,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL
-        )
-    except subprocess.TimeoutExpired:
-        terminate_benchm = subprocess.run(
-            "echo " + sudo + " | sudo -S pkill -9 redis-benchmark",
-            shell=True,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL
-        )
-        terminate_server = subprocess.run(
-            "echo " + sudo + " | sudo -S pkill -9 redis-server",
-            shell=True,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL
-        )
-
-
-def run_replic():
-    server_proc = subprocess.run(
-        "echo " + sudo + " | sudo -S ./redis-server &> /dev/null &",
-        shell=True,
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL
-    )
-    time.sleep(1)
-    try:
-        benchmark_proc = subprocess.run(
-            "echo " + sudo + " | sudo -S ./redis-benchmark -n 3500000",
-            shell=True,
-            timeout=150,
+            timeout=time_out,
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL
         )
@@ -199,7 +168,7 @@ def main():
 
     if str(sys.argv[1]) == "sharding":
         for i in range(int(sys.argv[2])):
-            run_sharding()
+            run_long(500000, 150)
             print("[info] finish one, left", int(sys.argv[2]) - 1)
             shard1.append(read_shard("sharding_914_results.txt"))
             shard2.append(read_shard("sharding_915_results.txt"))
@@ -209,7 +178,7 @@ def main():
 
     elif str(sys.argv[1]) == "replication":
         for i in range(int(sys.argv[2])):
-            run_replic()
+            run_long(3500000, 150)
             print("[info] finish one, left", int(sys.argv[2]) - 1)
             replication.append(read_replic())
             subprocess.run(
