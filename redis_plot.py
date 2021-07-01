@@ -2,7 +2,7 @@
 Description  : This is the evaluation script that runs experiments. This file 
 is a part of the csaw paper.
 Date         : 2021-06-25 21:37:03
-LastEditTime : 2021-06-30 22:42:55
+LastEditTime : 2021-07-01 00:38:10
 '''
 
 import numpy as np
@@ -97,8 +97,8 @@ def plot_ecdf():
 
     x_get_base = [0, 0, 1, 2]
     y_get_base = [0, 0.9374, 0.9999, 1]
-    x_get_rep = [0, 0, 1, 2]
-    y_get_rep = [0, 0.9311, 0.9999, 1]
+    x_get_rep = [0, 0, 1]
+    y_get_rep = [0, 0.9311, 0.9999]
     x_get_key = [0, 0, 1]
     y_get_key = [0, 0.8607, 1]
     x_get_size = [0, 0, 1]
