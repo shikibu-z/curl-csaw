@@ -2,14 +2,13 @@
 Description  : This is the evaluation script that runs experiments. This file 
 is a part of the csaw paper.
 Date         : 2021-06-23 22:23:06
-LastEditTime : 2021-06-30 21:54:03
+LastEditTime : 2021-07-01 02:55:09
 '''
 
 import sys
 import time
 import subprocess
 import numpy as np
-import matplotlib.pyplot as plt
 
 sudo = ""
 
@@ -36,7 +35,7 @@ def run_long(para_n, time_out):
     try:
         benchmark_proc = subprocess.run(
             "echo " + sudo +
-            " | sudo -S ./redis-benchmark -k 0 -c 1 -n " + str(para_n),
+            " | sudo -S ./redis-benchmark -k 0 -n " + str(para_n),
             shell=True,
             timeout=time_out,
             stdout=subprocess.DEVNULL,

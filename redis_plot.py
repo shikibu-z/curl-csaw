@@ -2,7 +2,7 @@
 Description  : This is the evaluation script that runs experiments. This file 
 is a part of the csaw paper.
 Date         : 2021-06-25 21:37:03
-LastEditTime : 2021-07-01 02:17:20
+LastEditTime : 2021-07-01 02:53:53
 '''
 
 import numpy as np
@@ -19,7 +19,7 @@ def plot_replic():
 
     # adjust time step, compensate for "Migration..." log
     times = np.arange(len(mean)) + 1
-    times[16:] += 1
+    times[14:] += 1
     times[29:] += 1
     times[44:] += 1
     times[59:] += 1
@@ -29,24 +29,25 @@ def plot_replic():
     times[119:] += 1
 
     fig = plt.figure()
-    plt.errorbar(times, mean/1000, yerr=stdv/1000, capsize=2, ecolor="green",
-                 elinewidth=0.6)
+    plt.errorbar(times, mean/1000, yerr=stdv/1000, capsize=1, ecolor="green",
+                 elinewidth=0.6, label="Mean Query Speed")
     # Migration time line
-    plt.axvline(x=15, color="red", ls="--", lw=0.6, label="Replicate")
-    plt.axvline(x=30, color="red", ls="--", lw=0.6)
-    plt.axvline(x=45, color="red", ls="--", lw=0.6)
-    plt.axvline(x=60, color="red", ls="--", lw=0.6)
-    plt.axvline(x=75, color="red", ls="--", lw=0.6)
-    plt.axvline(x=90, color="red", ls="--", lw=0.6)
-    plt.axvline(x=105, color="red", ls="--", lw=0.6)
-    plt.axvline(x=120, color="red", ls="--", lw=0.6)
-    plt.title("Replication Experiment")
+    plt.axvline(x=15, color="red", ls="-.", lw=0.7,
+                label="Replication Checkpoint")
+    plt.axvline(x=30, color="red", ls="-.", lw=0.7)
+    plt.axvline(x=45, color="red", ls="-.", lw=0.7)
+    plt.axvline(x=60, color="red", ls="-.", lw=0.7)
+    plt.axvline(x=75, color="red", ls="-.", lw=0.7)
+    plt.axvline(x=90, color="red", ls="-.", lw=0.7)
+    plt.axvline(x=105, color="red", ls="-.", lw=0.7)
+    plt.axvline(x=120, color="red", ls="-.", lw=0.7)
+    plt.title("Replication Usecase")
     plt.xlabel("Time (s)")
-    plt.ylabel("K Query/s")
+    plt.ylabel("KQuery/s")
     plt.legend()
     plt.grid(True)
-    plt.show()
-    # fig.savefig("replication.pdf", bbox_inches="tight")
+    # plt.show()
+    fig.savefig("replic.pdf", bbox_inches="tight")
 
 
 def plot_sharding():
@@ -134,9 +135,9 @@ def plot_ecdf():
 
 
 def main():
-    # plot_replic()
+    plot_replic()
     # plot_sharding()
-    plot_ecdf()
+    # plot_ecdf()
 
 
 if __name__ == "__main__":
