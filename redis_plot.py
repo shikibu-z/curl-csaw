@@ -2,7 +2,7 @@
 Description  : This is the evaluation script that runs experiments. This file 
 is a part of the csaw paper.
 Date         : 2021-06-25 21:37:03
-LastEditTime : 2021-06-30 21:50:28
+LastEditTime : 2021-06-30 22:42:55
 '''
 
 import numpy as np
@@ -86,31 +86,56 @@ def plot_sharding():
 
 
 def plot_ecdf():
+    x_set_base = [0, 0, 1]
+    y_set_base = [0, 0.9361, 1]
+    x_set_rep = [0, 0, 1, 2]
+    y_set_rep = [0, 0.9283, 1, 1]
     x_set_key = [0, 0, 1, 2]
     y_set_key = [0, 0.8613, 1, 1]
+    x_set_size = [0, 0, 1]
+    y_set_size = [0, 0.8406, 1]
+
+    x_get_base = [0, 0, 1, 2]
+    y_get_base = [0, 0.9374, 0.9999, 1]
+    x_get_rep = [0, 0, 1, 2]
+    y_get_rep = [0, 0.9311, 0.9999, 1]
     x_get_key = [0, 0, 1]
     y_get_key = [0, 0.8607, 1]
-    x_set_base = [0, 0, 1, 2]
-    y_set_base = [0, 0.9114, 1, 1]
-    x_get_base = [0, 0, 1]
-    y_get_base = [0, 0.9084, 1]
+    x_get_size = [0, 0, 1]
+    y_get_size = [0, 0.8375, 1]
 
     fig1, ax1 = plt.subplots()
-    ax1.plot(x_set_key, y_set_key, lw=2, markersize=7)
-    ax1.plot(x_set_base, y_set_base, ls="-.", lw=2, markersize=7)
-    ax1.legend(["Shard Key SET", "Base SET", ])
+    ax1.plot(x_set_base, y_set_base, lw=2, marker="o")
+    ax1.plot(x_set_rep, y_set_rep, ls="-.", lw=2)
+    ax1.plot(x_set_key, y_set_key, ls="--", lw=2, marker="^")
+    ax1.plot(x_set_size, y_set_size, ls=":", lw=2)
+    ax1.legend(["Baseline", "Replication",
+               "Shard by Key Hash", "Shard by Key Size"])
     ax1.set_xlabel("Time (ms)")
     ax1.set_ylabel("Cumulative Probability")
-    ax1.set_title("CDF of Req Latency of Uneven Sharding by Key Hash")
+    ax1.set_title("CDF of Req Latency of SET")
     ax1.grid(True)
-    plt.show()
-    # fig1.savefig("shard_size_cdf.pdf", bbox_inches="tight")
+    # plt.show()
+    fig1.savefig("set_cdf.pdf", bbox_inches="tight")
 
+    fig2, ax2 = plt.subplots()
+    ax2.plot(x_get_base, y_get_base, lw=2, marker="o")
+    ax2.plot(x_get_rep, y_get_rep, ls="-.", lw=2)
+    ax2.plot(x_get_key, y_get_key, ls="--", lw=2, marker="^")
+    ax2.plot(x_get_size, y_get_size, ls=":", lw=2)
+    ax2.legend(["Baseline", "Replication",
+               "Shard by Key Hash", "Shard by Key Size"])
+    ax2.set_xlabel("Time (ms)")
+    ax2.set_ylabel("Cumulative Probability")
+    ax2.set_title("CDF of Req Latency of GET")
+    ax2.grid(True)
+    # plt.show()
+    fig2.savefig("get_cdf.pdf", bbox_inches="tight")
 
 def main():
     # plot_replic()
-    plot_sharding()
-    # plot_ecdf()
+    # plot_sharding()
+    plot_ecdf()
 
 
 if __name__ == "__main__":

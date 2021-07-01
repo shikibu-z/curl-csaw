@@ -1,143 +1,90 @@
-9015,
-9697,
-9704,
-9693,
-9701,
-9700,
-9666,
-9665,
-9702,
-9699,
-9555,
-9276,
-9728,
-9729,
-9741,
-9747,
-9750,
-9765,
-9772,
-Replication checkpoint...
-9701,
-9532,
-9302,
-9613,
-9604,
-9605,
-9603,
-9602,
-9625,
-9117,
-9667,
-9624,
-9494,
-9704,
-9689,
-9074,
-9667,
-9646,
-9619,
-Replication checkpoint...
-8887,
-9735,
-9760,
-9681,
-9602,
-9726,
-9761,
-9737,
-9707,
-9738,
-9722,
-9699,
-9745,
-9736,
-9752,
-9623,
-9673,
-9716,
-9741,
-Replication checkpoint...
-9766,
-9716,
-9732,
-9747,
-9746,
-9725,
-9755,
-9738,
-9760,
-9758,
-9730,
-9521,
-9626,
-9716,
-9736,
-9754,
-9732,
-9757,
-9784,
-Replication checkpoint...
-8893,
-9699,
-9651,
-9636,
-9661,
-9653,
-9633,
-9642,
-9654,
-9633,
-9584,
-9642,
-9646,
-9696,
-9711,
-9690,
-9689,
-9711,
-9696,
-Replication checkpoint...
-9158,
-9677,
-9692,
-9705,
-9688,
-9679,
-9679,
-9692,
-9670,
-9681,
-9693,
-9665,
-9554,
-9602,
-9653,
-9667,
-9677,
-9662,
-9676,
-Replication checkpoint...
-9699,
-9484,
-9689,
-9676,
-9663,
-9685,
-9689,
-9679,
-9695,
-9701,
-9675,
-9659,
-9205,
-9725,
-8743,
-0,
-0,
-0,
-0,
-Replication checkpoint...
-1,
-0,
-0,
+parameters: -k 0 -c 1 -n 30000
+
+base
+====== SET ======
+  30000 requests completed in 2.76 seconds
+  1 parallel clients
+  3 bytes payload
+  keep alive: 0
+
+93.61% <= 0 milliseconds
+100.00% <= 1 milliseconds
+10881.39 requests per second
+
+====== GET ======
+  30000 requests completed in 2.69 seconds
+  1 parallel clients
+  3 bytes payload
+  keep alive: 0
+
+93.74% <= 0 milliseconds
+99.99% <= 1 milliseconds
+100.00% <= 2 milliseconds
+11148.27 requests per second
+
+replication
+====== SET ======
+  30000 requests completed in 4.13 seconds
+  1 parallel clients
+  3 bytes payload
+  keep alive: 0
+
+92.83% <= 0 milliseconds
+100.00% <= 1 milliseconds
+100.00% <= 995 milliseconds
+7265.68 requests per second
+
+====== GET ======
+  30000 requests completed in 4.88 seconds
+  1 parallel clients
+  3 bytes payload
+  keep alive: 0
+
+93.11% <= 0 milliseconds
+99.99% <= 1 milliseconds
+100.00% <= 994 milliseconds
+100.00% <= 995 milliseconds
+6142.51 requests per second
+
+shard by key
+====== SET ======
+  30000 requests completed in 5.00 seconds
+  1 parallel clients
+  3 bytes payload
+  keep alive: 0
+
+86.13% <= 0 milliseconds
+100.00% <= 1 milliseconds
+100.00% <= 2 milliseconds
+5997.60 requests per second
+
+====== GET ======
+  30000 requests completed in 5.02 seconds
+  1 parallel clients
+  3 bytes payload
+  keep alive: 0
+
+86.07% <= 0 milliseconds
+100.00% <= 1 milliseconds
+5979.67 requests per second
+
+shard by size
+====== SET ======
+  30000 requests completed in 5.72 seconds
+  1 parallel clients
+  3 bytes payload
+  keep alive: 0
+
+84.06% <= 0 milliseconds
+100.00% <= 1 milliseconds
+5248.43 requests per second
+
+====== GET ======
+  30000 requests completed in 5.74 seconds
+  1 parallel clients
+  3 bytes payload
+  keep alive: 0
+
+83.75% <= 0 milliseconds
+100.00% <= 1 milliseconds
+5230.13 requests per second
