@@ -2,13 +2,11 @@
 Description  : This is the evaluation script that runs experiments. This file 
 is a part of the csaw paper.
 Date         : 2021-06-23 22:23:06
-LastEditTime : 2021-06-30 14:42:53
+LastEditTime : 2021-06-30 21:54:03
 '''
 
 import sys
-import csv
 import time
-import math
 import subprocess
 import numpy as np
 import matplotlib.pyplot as plt
@@ -37,7 +35,8 @@ def run_long(para_n, time_out):
     time.sleep(1)
     try:
         benchmark_proc = subprocess.run(
-            "echo " + sudo + " | sudo -S ./redis-benchmark -n " + para_n,
+            "echo " + sudo +
+            " | sudo -S ./redis-benchmark -k 0 -c 1 -n " + str(para_n),
             shell=True,
             timeout=time_out,
             stdout=subprocess.DEVNULL,
@@ -169,7 +168,7 @@ def main():
     if str(sys.argv[1]) == "sharding":
         for i in range(int(sys.argv[2])):
             run_long(500000, 150)
-            print("[info] finish one, left", int(sys.argv[2]) - 1)
+            print("[info] finish one, left", int(sys.argv[2]) - i - 1)
             shard1.append(read_shard("sharding_914_results.txt"))
             shard2.append(read_shard("sharding_915_results.txt"))
             shard3.append(read_shard("sharding_916_results.txt"))
@@ -178,8 +177,8 @@ def main():
 
     elif str(sys.argv[1]) == "replication":
         for i in range(int(sys.argv[2])):
-            run_long(3500000, 150)
-            print("[info] finish one, left", int(sys.argv[2]) - 1)
+            run_long(1300000, 150)
+            print("[info] finish one, left", int(sys.argv[2]) - i - 1)
             replication.append(read_replic())
             subprocess.run(
                 "echo " + sudo + " | sudo -S rm results.txt",
