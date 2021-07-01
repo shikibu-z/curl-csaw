@@ -2,7 +2,7 @@
 Description  : This is the evaluation script that runs experiments. This file 
 is a part of the csaw paper.
 Date         : 2021-06-25 21:37:03
-LastEditTime : 2021-07-01 02:53:53
+LastEditTime : 2021-07-01 11:47:29
 '''
 
 import numpy as np
@@ -30,7 +30,7 @@ def plot_replic():
 
     fig = plt.figure()
     plt.errorbar(times, mean/1000, yerr=stdv/1000, capsize=1, ecolor="green",
-                 elinewidth=0.6, label="Mean Query Speed")
+                 elinewidth=0.6, label="Mean Query Rate")
     # Migration time line
     plt.axvline(x=15, color="red", ls="-.", lw=0.7,
                 label="Replication Checkpoint")
@@ -77,7 +77,7 @@ def plot_sharding():
                  linewidth=2, ls=":", elinewidth=0.7)
     plt.legend(["Shard 1", "Shard 2",
                 "Shard 3", "Shard 4"])
-    plt.title("Cumulative Req of Sharding by Key Size",
+    plt.title("Cumulative Req of Sharding by Object Size",
               fontsize=12)  # * key len from 400 - 950
     plt.xlabel("Time (s)", fontsize=12)
     plt.ylabel("Cumulative KReq", fontsize=12)
@@ -111,7 +111,7 @@ def plot_ecdf():
     ax1.plot(x_set_key, y_set_key, ls="--", lw=2, marker="^")
     ax1.plot(x_set_size, y_set_size, ls=":", lw=2)
     ax1.legend(["Baseline", "Replication",
-                "Shard by Key Hash", "Shard by Key Size"])
+                "Shard by Key Hash", "Shard by Object Size"])
     ax1.set_xlabel("Time (ms)")
     ax1.set_ylabel("Cumulative Probability")
     ax1.set_title("CDF of Req Latency of SET")
@@ -125,7 +125,7 @@ def plot_ecdf():
     ax2.plot(x_get_key, y_get_key, ls="--", lw=2, marker="^")
     ax2.plot(x_get_size, y_get_size, ls=":", lw=2)
     ax2.legend(["Baseline", "Replication",
-                "Shard by Key Hash", "Shard by Key Size"])
+                "Shard by Key Hash", "Shard by Object Size"])
     ax2.set_xlabel("Time (ms)")
     ax2.set_ylabel("Cumulative Probability")
     ax2.set_title("CDF of Req Latency of GET")
@@ -136,8 +136,8 @@ def plot_ecdf():
 
 def main():
     plot_replic()
-    # plot_sharding()
-    # plot_ecdf()
+    plot_sharding()
+    plot_ecdf()
 
 
 if __name__ == "__main__":
