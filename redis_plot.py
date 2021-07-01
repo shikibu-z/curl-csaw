@@ -2,7 +2,7 @@
 Description  : This is the evaluation script that runs experiments. This file 
 is a part of the csaw paper.
 Date         : 2021-06-25 21:37:03
-LastEditTime : 2021-07-01 00:38:10
+LastEditTime : 2021-07-01 02:17:20
 '''
 
 import numpy as np
@@ -13,7 +13,7 @@ plt.rcParams["pdf.fonttype"] = 42
 
 
 def plot_replic():
-    results = np.genfromtxt("redis_results/replic_2.csv")
+    results = np.genfromtxt("redis_results/replic.csv")
     mean = results[-2][: 120]
     stdv = results[-1][: 120]
 
@@ -110,7 +110,7 @@ def plot_ecdf():
     ax1.plot(x_set_key, y_set_key, ls="--", lw=2, marker="^")
     ax1.plot(x_set_size, y_set_size, ls=":", lw=2)
     ax1.legend(["Baseline", "Replication",
-               "Shard by Key Hash", "Shard by Key Size"])
+                "Shard by Key Hash", "Shard by Key Size"])
     ax1.set_xlabel("Time (ms)")
     ax1.set_ylabel("Cumulative Probability")
     ax1.set_title("CDF of Req Latency of SET")
@@ -124,13 +124,14 @@ def plot_ecdf():
     ax2.plot(x_get_key, y_get_key, ls="--", lw=2, marker="^")
     ax2.plot(x_get_size, y_get_size, ls=":", lw=2)
     ax2.legend(["Baseline", "Replication",
-               "Shard by Key Hash", "Shard by Key Size"])
+                "Shard by Key Hash", "Shard by Key Size"])
     ax2.set_xlabel("Time (ms)")
     ax2.set_ylabel("Cumulative Probability")
     ax2.set_title("CDF of Req Latency of GET")
     ax2.grid(True)
     # plt.show()
     fig2.savefig("get_cdf.pdf", bbox_inches="tight")
+
 
 def main():
     # plot_replic()
