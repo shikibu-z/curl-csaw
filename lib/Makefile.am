@@ -57,7 +57,7 @@ CFLAGS += @CURL_CFLAG_EXTRAS@
 AM_CPPFLAGS = -I$(top_srcdir)/include        \
               -I$(top_builddir)/lib          \
               -I$(top_srcdir)/lib            \
-              -I${HOME}/chopchop/compartmenting/libcompart
+              -I$(top_srcdir)/libcompart
 
 if USE_EMBEDDED_ARES
 AM_CPPFLAGS += -I$(top_builddir)/ares        \
@@ -82,7 +82,7 @@ VERSIONINFO=-version-info 10:0:6
 # For the full guide on libcurl ABI rules, see docs/libcurl/ABI
 
 AM_CPPFLAGS += -DBUILDING_LIBCURL -DINCLUDE_PID
-AM_LDFLAGS = -L${HOME}/chopchop/compartmenting/libcompart/compart.o
+AM_LDFLAGS = -L$(pwd)/../libcompart/compart.o
 AM_CFLAGS =
 
 libcurl_la_CPPFLAGS_EXTRA =

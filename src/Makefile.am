@@ -66,7 +66,7 @@ else
 curl_LDADD = $(top_builddir)/lib/libcurl.la @LIBMETALINK_LIBS@ @NSS_LIBS@ @SSL_LIBS@ @ZLIB_LIBS@ @CURL_NETWORK_AND_TIME_LIBS@
 endif
 
-curl_LDFLAGS = @LIBMETALINK_LDFLAGS@ ${HOME}/chopchop/compartmenting/libcompart/compart.o
+curl_LDFLAGS = @LIBMETALINK_LDFLAGS@ $(top_srcdir)/libcompart/compart.o
 curl_CPPFLAGS = $(AM_CPPFLAGS) $(LIBMETALINK_CPPFLAGS)
 
 # if unit tests are enabled, build a static library to link them with
